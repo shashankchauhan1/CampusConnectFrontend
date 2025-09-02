@@ -10,6 +10,7 @@ import Footer from './components/Footer'; // Import the new Footer
 import ChatPage from './components/ChatPage'; // Import the new ChatPage
 import ProfilePage from './components/ProfilePage';
 import ConversationsPage from './components/ConversationsPage';
+import InterviewPage from './components/InterviewPage';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,6 +57,15 @@ function App() {
               element={
                 <PrivateRoute>
                   <ConversationsPage />
+                </PrivateRoute>
+              } 
+            />
+
+             <Route 
+              path="/interview" 
+              element={
+                <PrivateRoute>
+                  <InterviewPage />
                 </PrivateRoute>
               } 
             />

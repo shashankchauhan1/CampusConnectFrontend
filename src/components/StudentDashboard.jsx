@@ -65,6 +65,14 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
         </nav>
       </div>
 
+       <div className="mb-8 p-6 bg-indigo-600 text-white rounded-lg shadow-lg">
+        <h3 className="text-2xl font-bold mb-2">AI Interview Practice</h3>
+        <p className="mb-4">Hone your skills with Roop, your personal AI interviewer. Practice for real-world technical interviews.</p>
+        <Link to="/interview" className="inline-block px-5 py-2 font-semibold bg-white text-indigo-600 rounded-lg hover:bg-gray-200 transition">
+          Start a Session
+        </Link>
+      </div>
+
       {/* 4. Conditionally render content based on active tab */}
       {activeTab === 'mentors' && (
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl border border-gray-700">
