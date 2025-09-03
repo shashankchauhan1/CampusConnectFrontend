@@ -11,6 +11,9 @@ import ChatPage from './components/ChatPage'; // Import the new ChatPage
 import ProfilePage from './components/ProfilePage';
 import ConversationsPage from './components/ConversationsPage';
 import InterviewPage from './components/InterviewPage';
+import AdminDashboard from './components/AdminDashboard';
+import WalletPage from './components/WalletPage';
+import CompanyInsightsPage from './components/CompanyInsightsPage';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,6 +64,15 @@ function App() {
               } 
             />
 
+            <Route 
+              path="/admin" 
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
+                </PrivateRoute>
+              } 
+            />
+
              <Route 
               path="/interview" 
               element={
@@ -69,6 +81,11 @@ function App() {
                 </PrivateRoute>
               } 
             />
+
+            <Route path="/wallet" element={<PrivateRoute><WalletPage /></PrivateRoute>} />
+
+            <Route path="/insights" element={<PrivateRoute><CompanyInsightsPage /></PrivateRoute>} />
+
             
           </Routes>
         </main>

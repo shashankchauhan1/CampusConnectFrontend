@@ -63,6 +63,12 @@ const Navbar = ({ setSearchTerm }) => {
               <Link to={`/profile/${currentUserId}`} className="text-gray-300 hover:text-white transition duration-300 font-semibold">
                 My Profile
               </Link>
+              <Link to="/wallet" className="text-gray-300 hover:text-white transition duration-300">
+                Wallet
+              </Link>
+              <Link to="/insights" className="text-gray-300 hover:text-white transition duration-300">
+                Company Insights
+              </Link>
               <Link to="/conversations" className="text-gray-300 hover:text-white transition duration-300">
                 Conversations
               </Link>

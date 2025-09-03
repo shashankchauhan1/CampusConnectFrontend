@@ -88,9 +88,15 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
                         <p className="text-sm text-gray-300">{mentor.jobTitle || 'Mentor'}</p>
                       </div>
                     </div>
-                    <span className="px-4 py-1 text-sm font-bold rounded-full bg-green-600 text-white">
-                      {mentor.role}
-                    </span>
+                    <div className="text-right">
+                      <span className="px-4 py-1 text-sm font-bold rounded-full bg-green-600 text-white">
+                        {mentor.role}
+                      </span>
+                      {/* Display Badge Score */}
+                      {mentor.badgeScore > 0 && (
+                        <p className="text-xs text-gray-300 mt-1">Score: {mentor.badgeScore}</p>
+                      )}
+                    </div>
                   </li>
                 </Link>
               ))}
