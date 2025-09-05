@@ -3,14 +3,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
-import ResumeChecker from './ResumeChecker'; // 1. Import the new component
+import ResumeChecker from './ResumeChecker';
 
 const StudentDashboard = ({ currentUser, searchTerm }) => {
   const [mentors, setMentors] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState('mentors'); // 2. State to manage tabs
+  const [activeTab, setActiveTab] = useState('mentors');
 
   useEffect(() => {
+    // ## THIS IS THE FIX ##
+    // We need to set the auth token here so the Resume Checker can use it.
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.defaults.headers.common['x-auth-token'] = token;
+    }
+    // --------------------
+
     const fetchMentors = async () => {
       try {
         const res = await axios.get('http://localhost:3001/api/users');
@@ -22,7 +30,7 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
     fetchMentors();
 
     const socket = io('http://localhost:3001');
-    if(currentUser) socket.emit('add-user', currentUser._id);
+    if (currentUser) socket.emit('add-user', currentUser._id);
     socket.on('update-online-users', (usersArray) => {
       setOnlineUsers(usersArray);
     });
@@ -39,7 +47,14 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
         Student Dashboard
       </h2>
       
-      {/* 3. Tab Navigation */}
+      <div className="mb-8 p-6 bg-indigo-600 text-white rounded-lg shadow-lg">
+        <h3 className="text-2xl font-bold mb-2">AI Interview Practice</h3>
+        <p className="mb-4">Hone your skills with Roop, your personal AI interviewer.</p>
+        <Link to="/interview" className="inline-block px-5 py-2 font-semibold bg-white text-indigo-600 rounded-lg hover:bg-gray-200 transition">
+          Start a Session
+        </Link>
+      </div>
+
       <div className="mb-6 border-b border-gray-700">
         <nav className="flex space-x-6">
           <button
@@ -65,15 +80,6 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
         </nav>
       </div>
 
-       <div className="mb-8 p-6 bg-indigo-600 text-white rounded-lg shadow-lg">
-        <h3 className="text-2xl font-bold mb-2">AI Interview Practice</h3>
-        <p className="mb-4">Hone your skills with Roop, your personal AI interviewer. Practice for real-world technical interviews.</p>
-        <Link to="/interview" className="inline-block px-5 py-2 font-semibold bg-white text-indigo-600 rounded-lg hover:bg-gray-200 transition">
-          Start a Session
-        </Link>
-      </div>
-
-      {/* 4. Conditionally render content based on active tab */}
       {activeTab === 'mentors' && (
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl border border-gray-700">
           {filteredMentors.length > 0 ? (
@@ -88,15 +94,9 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
                         <p className="text-sm text-gray-300">{mentor.jobTitle || 'Mentor'}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="px-4 py-1 text-sm font-bold rounded-full bg-green-600 text-white">
-                        {mentor.role}
-                      </span>
-                      {/* Display Badge Score */}
-                      {mentor.badgeScore > 0 && (
-                        <p className="text-xs text-gray-300 mt-1">Score: {mentor.badgeScore}</p>
-                      )}
-                    </div>
+                    <span className={`px-4 py-1 text-sm font-bold rounded-full bg-green-600 text-white`}>
+                      {mentor.role}
+                    </span>
                   </li>
                 </Link>
               ))}
