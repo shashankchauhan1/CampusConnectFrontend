@@ -14,6 +14,9 @@ import InterviewPage from './components/InterviewPage';
 import AdminDashboard from './components/AdminDashboard';
 import WalletPage from './components/WalletPage';
 import CompanyInsightsPage from './components/CompanyInsightsPage';
+import AskQuestionPage from './components/AskQuestionPage';
+import QuestionsPage from './components/QuestionsPage';
+import QuestionDetailPage from './components/QuestionDetailPage';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -85,6 +88,11 @@ function App() {
             <Route path="/wallet" element={<PrivateRoute><WalletPage /></PrivateRoute>} />
 
             <Route path="/insights" element={<PrivateRoute><CompanyInsightsPage /></PrivateRoute>} />
+
+            {/* Add these routes inside your <Routes> */}
+            <Route path="/ask" element={<PrivateRoute><AskQuestionPage /></PrivateRoute>} />
+            <Route path="/questions" element={<PrivateRoute><QuestionsPage /></PrivateRoute>} />
+            <Route path="/questions/:questionId" element={<PrivateRoute><QuestionDetailPage /></PrivateRoute>} />
 
             
           </Routes>

@@ -1,4 +1,3 @@
-// client/src/components/CompanyInsightsPage.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -10,6 +9,10 @@ const CompanyInsightsPage = () => {
   useEffect(() => {
     const fetchInsights = async () => {
       try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          axios.defaults.headers.common['x-auth-token'] = token;
+        }
         const res = await axios.get('http://localhost:3001/api/insights');
         setInsights(res.data);
       } catch (error) {
@@ -34,17 +37,17 @@ const CompanyInsightsPage = () => {
         type="text"
         placeholder="Search for a company (e.g., Adobe, Google)..."
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-3 mb-8 bg-gray-700 border border-gray-600 rounded-lg text-white"
+        className="w-full p-3 mb-8 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
-      {loading ? <p className="text-white">Loading insights...</p> : (
+      {loading ? <p className="text-white text-center">Loading insights...</p> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredInsights.map(insight => (
-            <div key={insight._id} className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
+            <div key={insight._id} className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 flex flex-col">
               <h2 className="text-2xl font-bold text-white">{insight.companyName}</h2>
-              <p className="text-indigo-400 font-semibold">{insight.role}</p>
+              <p className="text-indigo-400 font-semibold">{insight.role} ({insight.year})</p>
               <p className="text-sm text-gray-400 mt-2">Shared by: {insight.author.name}</p>
-              <div className="mt-4 border-t border-gray-700 pt-4">
+              <div className="mt-4 border-t border-gray-700 pt-4 flex-grow">
                 <h4 className="font-semibold text-white mb-2">Key Topics Asked:</h4>
                 <div className="flex flex-wrap gap-2">
                   {insight.topicsAsked.slice(0, 3).map((topic, index) => (

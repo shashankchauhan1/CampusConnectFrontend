@@ -80,7 +80,7 @@ const StudentDashboard = ({ currentUser, searchTerm }) => {
             <ul className="space-y-4">
               {filteredMentors.map((mentor) => (
                 <Link to={`/profile/${mentor._id}`} key={mentor._id}>
-                  <li className="p-4 bg-gray-700 rounded-lg flex justify-between items-center transition duration-300 hover:bg-gray-600 cursor-pointer">
+                  <li className="p-4 bg-gray-700 rounded-lg flex justify-between items-center transition duration-300 hover:bg-gray-600 cursor-pointer mb-4">
                     <div className="flex items-center">
                       <div className={`h-3 w-3 rounded-full mr-4 ${onlineUsers.includes(mentor._id) ? 'bg-green-500' : 'bg-gray-500'}`}></div>
                       <div>

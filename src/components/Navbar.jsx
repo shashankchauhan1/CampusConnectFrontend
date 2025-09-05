@@ -51,14 +51,14 @@ const Navbar = ({ setSearchTerm }) => {
               type="text"
               placeholder="Search for a user..."
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+              className="w-hald px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
             />
           </div>
         )}
 
         <nav>
           {isAuthenticated ? (
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-10">
               {/* 2. ADD THE "MY PROFILE" LINK HERE */}
               <Link to={`/profile/${currentUserId}`} className="text-gray-300 hover:text-white transition duration-300 font-semibold">
                 My Profile
@@ -75,6 +75,11 @@ const Navbar = ({ setSearchTerm }) => {
               <Link to="/dashboard" className="text-gray-300 hover:text-white transition duration-300">
                 Dashboard
               </Link>
+
+<Link to="/questions" className="text-gray-300 hover:text-white transition">
+  Q&A Forum
+</Link>
+
               <button
                 onClick={handleLogout}
                 className="px-5 py-2 text-white bg-red-700 rounded-lg hover:bg-red-800 transition duration-300"
