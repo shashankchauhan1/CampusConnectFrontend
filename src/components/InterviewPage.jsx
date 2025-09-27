@@ -36,20 +36,33 @@ const InterviewPage = () => {
     try {
       const token = localStorage.getItem('token');
       if (token) axios.defaults.headers.common['x-auth-token'] = token;
-      
+
       const res = await axios.post('http://localhost:3001/api/ai/interview', { topic, company, history: [] });
       const newHistory = res.data.updatedHistory;
       setHistory(newHistory);
       setHasStarted(true);
 
-      // We find the new message and speak it directly, only once.
       const roopsReply = newHistory.find(turn => turn.role === 'model');
       if (roopsReply) {
         speak(roopsReply.parts[0].text);
       }
     } catch (error) {
       console.error("Failed to start interview", error);
-      alert("Error starting interview. Please check the console.");
+
+      // Enhanced fallback with realistic mock data
+      const mockHistory = [
+        { role: 'user', parts: [{ text: `Tell me about ${topic} at ${company}.` }] },
+        { role: 'model', parts: [{ text: `Sure! Let's discuss ${topic} at ${company}. What specific aspect would you like to focus on?` }] },
+      ];
+      setHistory(mockHistory);
+      setHasStarted(true);
+
+      const roopsReply = mockHistory.find(turn => turn.role === 'model');
+      if (roopsReply) {
+        speak(roopsReply.parts[0].text);
+      }
+
+      alert('Using mock data as the API is unavailable.');
     } finally {
       setIsLoading(false);
     }
@@ -74,8 +87,7 @@ const InterviewPage = () => {
         company 
       });
       const newHistoryFromServer = res.data.updatedHistory;
-      
-      // We find the newest message from the server and speak it directly, only once.
+
       const roopsReply = newHistoryFromServer[newHistoryFromServer.length - 1];
       if (roopsReply && roopsReply.role === 'model') {
         speak(roopsReply.parts[0].text);
@@ -83,6 +95,15 @@ const InterviewPage = () => {
       setHistory(newHistoryFromServer);
     } catch (error) {
       console.error("Failed to submit answer", error);
+
+      // Enhanced fallback for answer submission
+      const fallbackReply = {
+        role: 'model',
+        parts: [{ text: `I'm sorry, I couldn't process your answer. Let's continue discussing ${topic}.` }],
+      };
+      setHistory([...newHistoryWithUserAnswer, fallbackReply]);
+
+      speak(fallbackReply.parts[0].text);
     } finally {
       setIsLoading(false);
     }

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 
 const ConversationsPage = () => {
   const [conversations, setConversations] = useState([]);
@@ -26,18 +27,21 @@ const ConversationsPage = () => {
   }
 
   return (
-    <div className="bg-gray-900 text-gray-100 min-h-screen pt-8">
+    <div className="bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 min-h-screen pt-8">
       <main className="container mx-auto px-6">
-        <h2 className="text-3xl font-extrabold text-white mb-8">My Conversations</h2>
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl border border-gray-700">
+        <h2 className="text-4xl font-extrabold text-white mb-8 text-center">My Conversations</h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-2xl border border-gray-700">
           {conversations.length > 0 ? (
-            <ul className="space-y-4">
+            <ul className="space-y-6">
               {conversations.map((convo) => (
                 <Link to={`/chat/${convo.partner._id}`} key={convo.partner._id}>
-                  <li className="p-4 bg-gray-700 rounded-lg flex justify-between items-center transition duration-300 hover:bg-gray-600 cursor-pointer">
-                    <div>
-                      <p className="font-semibold text-white text-lg">{convo.partner.name}</p>
-                      <p className="text-sm text-gray-400 truncate max-w-md">{convo.lastMessage}</p>
+                  <li className="p-4 bg-gray-700 rounded-lg flex justify-between items-center transition duration-300 hover:bg-gray-600 cursor-pointer shadow-md">
+                    <div className="flex items-center space-x-4">
+                      <FaUserCircle className="text-3xl text-gray-400" />
+                      <div>
+                        <p className="font-semibold text-white text-lg">{convo.partner.name}</p>
+                        <p className="text-sm text-gray-400 truncate max-w-md">{convo.lastMessage}</p>
+                      </div>
                     </div>
                     <span className="text-xs text-gray-400">
                       {new Date(convo.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -47,7 +51,7 @@ const ConversationsPage = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-400">You have no active conversations.</p>
+            <p className="text-gray-400 text-center">You have no active conversations.</p>
           )}
         </div>
       </main>

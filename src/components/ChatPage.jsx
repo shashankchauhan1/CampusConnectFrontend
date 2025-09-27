@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const ChatPage = () => {
   const [socket, setSocket] = useState(null);
@@ -40,8 +41,6 @@ const ChatPage = () => {
   useEffect(() => {
     if (socket) {
       socket.on('private-message', (data) => {
-        // This listener now handles all incoming messages, including your own.
-        // A check to prevent rare duplicate messages.
         setMessages((prev) => (prev.some(msg => msg._id === data._id) ? prev : [...prev, data]));
       });
       socket.on('message-deleted', ({ messageId }) => {
@@ -61,19 +60,14 @@ const ChatPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // ## THIS IS THE CORRECTED FUNCTION ##
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() && socket) {
-      // 1. Only emit the message to the server.
       socket.emit('private-message', { recipientId, message: newMessage });
-      
-      // 2. Clear the input. We will NOT add the message to the state here.
-      // We wait for the server to send it back to us via the 'private-message' listener.
       setNewMessage('');
     }
   };
-  
+
   const handleDeleteMessage = (messageId) => {
     if (window.confirm('Are you sure you want to delete this message?')) {
       socket.emit('delete-message', { messageId });
@@ -99,20 +93,19 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] container mx-auto px-6 py-8">
-      <div className="flex-grow overflow-y-auto p-4 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+    <div className="flex flex-col h-[calc(100vh-140px)] container mx-auto px-6 py-8 bg-gradient-to-b from-gray-900 to-gray-800">
+      <div className="flex-grow overflow-y-auto p-4 bg-gray-800 rounded-lg shadow-2xl border border-gray-700">
         {messages.map((msg) => (
           <div
             key={msg._id}
-            className={`flex items-end my-2 ${msg.sender === senderId ? 'justify-end' : 'justify-start'}`}
+            className={`flex items-end my-3 ${msg.sender === senderId ? 'justify-end' : 'justify-start'}`}
             onMouseEnter={() => setHoveredMessageId(msg._id)}
             onMouseLeave={() => setHoveredMessageId(null)}
           >
-            <div className={`px-4 py-2 rounded-lg max-w-xs lg:max-w-md relative group ${
+            <div className={`px-4 py-3 rounded-2xl max-w-xs lg:max-w-md relative group shadow-md transition-transform transform hover:scale-105 ${
                 msg.sender === senderId ? 'bg-indigo-600 text-white' : 'bg-gray-600 text-white'
             }`}>
               {editingMessage?.id === msg._id ? (
-                // Editing View
                 <div>
                   <input
                     type="text"
@@ -127,11 +120,9 @@ const ChatPage = () => {
                   </div>
                 </div>
               ) : (
-                // Normal View with Timestamp
                 <div>
                   <p className="break-words">{msg.content}</p>
                   {msg.isEdited && <span className="text-xs text-gray-400 font-light">(edited)</span>}
-                  
                   <div className="text-right text-xs text-gray-400 mt-1">
                     {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </div>
@@ -139,11 +130,14 @@ const ChatPage = () => {
               )}
             </div>
 
-            {/* Edit/Delete Icons */}
             {msg.sender === senderId && hoveredMessageId === msg._id && !editingMessage && (
               <div className="flex space-x-2 ml-2 text-gray-400">
-                <button onClick={() => setEditingMessage({ id: msg._id, content: msg.content })} title="Edit">✏️</button>
-                <button onClick={() => handleDeleteMessage(msg._id)} title="Delete">🗑️</button>
+                <button onClick={() => setEditingMessage({ id: msg._id, content: msg.content })} title="Edit">
+                  <FaEdit className="hover:text-indigo-400" />
+                </button>
+                <button onClick={() => handleDeleteMessage(msg._id)} title="Delete">
+                  <FaTrash className="hover:text-red-400" />
+                </button>
               </div>
             )}
           </div>
@@ -156,11 +150,11 @@ const ChatPage = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type your message..."
-          className="flex-grow px-3 py-2 bg-gray-700 border border-gray-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+          className="flex-grow px-4 py-3 bg-gray-700 border border-gray-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
         />
         <button
           type="submit"
-          className="px-6 py-2 text-white font-semibold bg-indigo-600 rounded-r-lg hover:bg-indigo-700"
+          className="px-6 py-3 text-white font-semibold bg-indigo-600 rounded-r-lg hover:bg-indigo-700 transition-colors"
         >
           Send
         </button>

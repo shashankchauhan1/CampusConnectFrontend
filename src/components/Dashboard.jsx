@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import StudentDashboard from './StudentDashboard';
-import MentorDashboard from './MentorDashboard';
+import MentorDashboard from './MentorDashboard'
 
 const Dashboard = ({ searchTerm }) => {
   const [currentUser, setCurrentUser] = useState(null);
